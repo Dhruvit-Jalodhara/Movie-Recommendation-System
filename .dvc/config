@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.dvc
