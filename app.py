@@ -90,5 +90,6 @@ def results():
         )
 
 if __name__ == '__main__':
-    # Hugging Face Spaces environment requires host 0.0.0.0 and port 7860
-    app.run(host='0.0.0.0', port=7860, debug=False)
+    # Automatically read the dynamic port assigned by Zeabur, defaulting to 5001 locally
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host='0.0.0.0', port=port, debug=False)

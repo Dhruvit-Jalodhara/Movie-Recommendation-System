@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 from dataclasses import dataclass
+import joblib
 
 from src.exception import CustomException
 from src.logger import logging
@@ -29,20 +30,21 @@ class PredictPipeline:
     def __init__(self):
         """Initializes the pipeline and loads all required vector components into memory."""
         try:
-            self.config = PredictPipelineConfig()
+            processed_movies_path = os.path.join('artifacts', 'movies_processed.joblib')
+            movie_features_svd_path = os.path.join("artifacts", "movie_features_svd.joblib")
+            tfidf_matrix_path = os.path.join("artifacts", "tfidf_matrix.joblib")
+            movie_mapping_path = os.path.join("artifacts", "movie_mapping.joblib")
             
-            logging.info("Loading evaluation feature spaces for real-time inference...")
-            self.movies_df = load_object(self.config.processed_movies_path)
-            self.movie_features_svd = load_object(self.config.movie_features_svd_path)
-            self.tfidf_matrix = load_object(self.config.tfidf_matrix_path)
-            self.movie_to_idx = load_object(self.config.movie_mapping_path)
+            self.movies_df = joblib.load(processed_movies_path)
+            self.movie_features_svd = joblib.load(movie_features_svd_path)
+            self.tfidf_matrix = joblib.load(tfidf_matrix_path)
+            self.movie_to_idx = joblib.load(movie_mapping_path)
             
-            # Fast reverse lookup dictionary mapping index positions back to titles
             self.idx_to_movie = {v: k for k, v in self.movie_to_idx.items()}
-            logging.info("Live inference structures ready!")
+            print("🚀 ML inference layers initialized from cached storage boundaries.")
             
         except Exception as e:
-            raise CustomException(e, sys)
+            raise e
 
     def get_hybrid_recommendations(self, movie_title: str, alpha: float = 0.5, top_n: int = 5):
         """
