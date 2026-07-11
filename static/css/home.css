@@ -165,31 +165,40 @@ body {
 }
 
 /* =======================================================================
-   ✨ AMBIENT LOWER CORNER GLOW EFFECTS
+   ✨ ENHANCED AMBIENT LOWER CORNER GLOW EFFECTS
    ======================================================================= */
 body::before,
 body::after {
     content: "";
     position: fixed;
     bottom: 0;
-    width: 35vw; 
-    height: 35vw;
-    max-width: 400px;
-    max-height: 400px;
-    pointer-events: none; /* Allows interacting with click targets sitting on top of the glow */
-    z-index: 0;           /* Soft positioning behind panels but over core canvas base */
-    filter: blur(80px);   /* High dispersion diffusion for premium gradient mixing */
-    opacity: 0.45;        /* Balanced brightness levels */
+    width: 45vw;          /* Increased width for a wider reach */
+    height: 45vw;         /* Increased height for a wider reach */
+    max-width: 500px;     /* Expanded footprint boundary */
+    max-height: 500px;
+    pointer-events: none; /* Allows interacting with links and UI elements directly above it */
+    z-index: 0;           /* Locks layout positioning cleanly above background overlay */
+    filter: blur(90px);   /* High-dispersion blending radius */
+    opacity: 0.70;        /* Boosted overall opacity from 0.45 for a much stronger presence */
 }
 
-/* Lower Left Ambient Glow - Cinematic Crimson */
+/* Lower Left Ambient Glow - Cinematic Crimson (Amplified) */
 body::before {
     left: 0;
-    background: radial-gradient(circle at bottom left, rgba(229, 9, 20, 0.35), transparent 75%);
+    background: radial-gradient(circle at bottom left, rgba(229, 9, 20, 0.50), transparent 75%);
 }
 
-/* Lower Right Ambient Glow - Deep Production Velvet Violet */
+/* Lower Right Ambient Glow - Deep Production Velvet Violet (Amplified) */
 body::after {
     right: 0;
-    background: radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.25), transparent 75%);
+    background: radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.40), transparent 75%);
+}
+
+/* Ensure mobile layouts display the intensified glow beautifully */
+@media (max-width: 768px) {
+    body::before, body::after {
+        width: 65vw;
+        height: 65vw;
+        opacity: 0.75;
+    }
 }

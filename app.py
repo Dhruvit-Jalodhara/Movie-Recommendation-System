@@ -1,17 +1,20 @@
 from flask import Flask, render_template, request
 import os
 import pandas as pd
-# Import the custom pipeline module directly matching your directory structure
 from src.pipeline import predict_pipeline
 
 app = Flask(__name__)
 
-# --- 1. INITIALIZE INFRASTRUCTURE & LOAD ARTIFACTS ON STARTUP ---
+# Global state tracking for catalog data and pipeline errors
+INIT_ERROR_MSG = None
+FULL_MOVIE_CATALOG = []
+VAL_LOOKUP_MAP = {}
+
 try:
-    # Instantiate the pipeline class object to fire up vector spaces once when server boots
+    # Initialize ML pipeline on server boot
     pipeline = predict_pipeline.PredictPipeline()
     
-    # SAFE EXTRACTION: Read keys robustly whether movie_to_idx is a Dict, Series, or Index
+    # Extract keys safely regardless of object type (Dict, Series, or Index)
     if hasattr(pipeline, 'movie_dict'):
         FULL_MOVIE_CATALOG = sorted(list(pipeline.movie_dict.keys()))
     elif hasattr(pipeline.movie_to_idx, 'index'):
@@ -19,37 +22,36 @@ try:
     else:
         FULL_MOVIE_CATALOG = sorted(list(pipeline.movie_to_idx.keys()))
     
-    # Create a quick case-insensitive reverse lookup dict for submission safety
+    # Lowercase mapping for case-insensitive validation
     VAL_LOOKUP_MAP = {str(title).lower().strip(): title for title in FULL_MOVIE_CATALOG}
-    
-    print(f"Recommender Engine Connected! Loaded {len(FULL_MOVIE_CATALOG)} titles into memory.")
+    print(f"✅ Engine Connected! Loaded {len(FULL_MOVIE_CATALOG)} titles.")
 except Exception as init_error:
-    FULL_MOVIE_CATALOG = []
-    VAL_LOOKUP_MAP = {}
-    print(f"Initialization Failure: Could not load machine learning artifacts. Details: {str(init_error)}")
+    INIT_ERROR_MSG = str(init_error)
+    print(f"⚠️ Initialization Failure: {INIT_ERROR_MSG}")
 
 @app.route('/')
 def home():
-    """Renders the Project Showcase landing page introduction."""
     return render_template('home.html')
 
 @app.route('/configure')
 def configure():
-    """Serves the configuration panel packed with the complete 16,000+ movie index dataset."""
+    # Force loading errors directly into the UI error banner if initialization failed
+    if INIT_ERROR_MSG:
+        return render_template(
+            'predict.html', 
+            movies=[], 
+            error=f"Backend Load Failure: {INIT_ERROR_MSG}. Check your file paths or data URLs."
+        )
     return render_template('predict.html', movies=FULL_MOVIE_CATALOG)
 
 @app.route('/results', methods=['POST'])
 def results():
-    """Executes the machine learning model pipeline using the live user preferences."""
     raw_user_input = request.form.get('movie_title', '').strip()
-    
-    # Extract alpha configuration slider balance scale (ranges cleanly from 0.0 to 1.0)
     alpha_value = float(request.form.get('alpha', 0.5))
     
-    # 🧼 CASE NORMALIZATION: Match user input case-insensitively against catalog map keys
+    # Match user string case-insensitively against catalog map keys
     selected_movie = VAL_LOOKUP_MAP.get(raw_user_input.lower())
     
-    # Dynamic verification fallback check against the database index universe
     if not selected_movie:
         return render_template(
             'predict.html', 
@@ -58,14 +60,13 @@ def results():
         )
     
     try:
-        # --- 2. EXECUTE YOUR INFERENCE ENGINE ---
+        # Run inference matrix engine
         raw_model_outputs = pipeline.get_hybrid_recommendations(
             movie_title=selected_movie, 
             alpha=alpha_value, 
             top_n=5
         )
         
-        # Validation guardrail in case matrix slice suggestions yield empty frames
         if not raw_model_outputs:
             return render_template(
                 'predict.html',
@@ -73,7 +74,7 @@ def results():
                 error="The matrix processing layer was unable to compute similarity slices for this title."
             )
         
-        # --- 3. STRUCTURE MODEL RECORDS CLEANLY FOR UI SLIDERS ---
+        # Format metric scores cleanly into integers for frontend meters
         formatted_recommendations = []
         for row in raw_model_outputs:
             formatted_recommendations.append({
@@ -91,7 +92,6 @@ def results():
         )
         
     except Exception as server_error:
-        # Fallback tracking if matrix math or sparse vectors mismatch at runtime
         return render_template(
             'predict.html', 
             movies=FULL_MOVIE_CATALOG, 
@@ -99,6 +99,6 @@ def results():
         )
 
 if __name__ == '__main__':
-    # Automatically reads the container port assigned by the host platform
+    # Read container port assigned dynamically by the cloud host environment
     port = int(os.environ.get("PORT", 7860))
     app.run(host='0.0.0.0', port=port, debug=False)
