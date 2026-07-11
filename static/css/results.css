@@ -246,19 +246,35 @@ body {
 /* =======================================================================
    ✨ ENHANCED AMBIENT LOWER CORNER GLOW EFFECTS
    ======================================================================= */
-body::before,
-body::after {
+
+/* Establishes the canvas framework so glows sit cleanly on top of the background */
+html {
+    background-color: #0b0b0e; /* Deep cinematic dark background color */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative; 
+}
+
+body::before, body::after {
     content: "";
-    position: fixed;
+    position: fixed;     /* Locks glows to viewport corners during scroll */
     bottom: 0;
-    width: 45vw;          /* Increased width for a wider reach */
-    height: 45vw;         /* Increased height for a wider reach */
-    max-width: 500px;     /* Expanded footprint boundary */
+    width: 45vw;         /* Increased width for a wider reach */
+    height: 45vw;        /* Increased height for a wider reach */
+    max-width: 500px;    /* Expanded footprint boundary */
     max-height: 500px;
     pointer-events: none; /* Allows interacting with links and UI elements directly above it */
-    z-index: 0;           /* Locks layout positioning cleanly above background overlay */
-    filter: blur(90px);   /* High-dispersion blending radius */
-    opacity: 0.70;        /* Boosted overall opacity from 0.45 for a much stronger presence */
+    z-index: 0;          /* Locks layout positioning cleanly above background overlay */
+    filter: blur(90px);  /* High-dispersion blending radius */
+    opacity: 0.70;       /* Boosted overall opacity from 0.45 for a much stronger presence */
+    
+    /* Performance Fix: Forces GPU rendering to prevent laggy mobile scrolling */
+    will-change: transform; 
+    transform: translate3d(0, 0, 0); 
 }
 
 /* Lower Left Ambient Glow - Cinematic Crimson (Amplified) */
@@ -276,8 +292,8 @@ body::after {
 /* Ensure mobile layouts display the intensified glow beautifully */
 @media (max-width: 768px) {
     body::before, body::after {
-        width: 65vw;
+        width: 65vw;     /* Expands footprint on small screens */
         height: 65vw;
-        opacity: 0.75;
+        opacity: 0.75;   /* Boosted brightness for mobile screens */
     }
 }

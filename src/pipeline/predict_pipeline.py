@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 from dataclasses import dataclass
 import joblib
+import urllib.request  # Built-in standard library tool to handle DVC streaming downloads
 
 # Import custom monitoring and diagnostic tools from your framework
 from src.exception import CustomException
@@ -35,6 +36,23 @@ class PredictPipeline:
             movie_features_svd_path = os.path.join("artifacts", "movie_features_svd.joblib")
             tfidf_matrix_path = os.path.join("artifacts", "tfidf_matrix.joblib")
             movie_mapping_path = os.path.join("artifacts", "movie_mapping.joblib")
+            
+            # 🛡️ AUTOMATED DVC DOWNLOADER: Safely handle Git cache misses by pulling from DagsHub API
+            os.makedirs('artifacts', exist_ok=True)
+            
+            dvc_artifacts = {
+                processed_movies_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movies_processed.joblib",
+                movie_features_svd_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movie_features_svd.joblib",
+                tfidf_matrix_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/tfidf_matrix.joblib",
+                movie_mapping_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movie_mapping.joblib"
+            }
+            
+            for path, url in dvc_artifacts.items():
+                if not os.path.exists(path):
+                    print(f"📥 Cache miss: Fetching DVC asset from DagsHub: {path}...")
+                    logging.info(f"Streaming missing asset from DagsHub DVC remote: {path}")
+                    urllib.request.urlretrieve(url, path)
+                    print(f"✅ Successfully downloaded and synchronized: {path}")
             
             # Load matrix files and dataframes from disk memory
             self.movies_df = joblib.load(processed_movies_path)

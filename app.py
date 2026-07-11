@@ -31,16 +31,22 @@ except Exception as init_error:
 
 @app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/configure')
-def configure():
-    # Force loading errors directly into the UI error banner if initialization failed
+    """Renders the main page. Surfaces startup errors if data loading fails."""
     if INIT_ERROR_MSG:
         return render_template(
             'predict.html', 
             movies=[], 
             error=f"Backend Load Failure: {INIT_ERROR_MSG}. Check your file paths or data URLs."
+        )
+    return render_template('predict.html', movies=FULL_MOVIE_CATALOG)
+
+@app.route('/configure')
+def configure():
+    if INIT_ERROR_MSG:
+        return render_template(
+            'predict.html', 
+            movies=[], 
+            error=f"Backend Load Failure: {INIT_ERROR_MSG}."
         )
     return render_template('predict.html', movies=FULL_MOVIE_CATALOG)
 
