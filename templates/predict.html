@@ -34,8 +34,8 @@
                 <div class="form-group">
                     <label for="movie_search">Select a Reference Film</label>
                     <div class="custom-dropdown" id="movie-dropdown">
-                        <input type="hidden" name="movie_title" id="hidden_movie_title" required>
-                        <input type="text" id="movie_search" placeholder="Click to browse all or type to search..." autocomplete="off" required>
+                        <!-- 🛡️ Fix: Submitted name attribute moved to the main visible input rail -->
+                        <input type="text" id="movie_search" name="movie_title" placeholder="Click to browse all or type to search..." autocomplete="off" required>
                         
                         <!-- Floating Option List Container -->
                         <div class="dropdown-menu" id="dropdown-menu"></div>
@@ -62,17 +62,17 @@
     <!-- Dual Mode Dropdown & Search Select Controller -->
     <script>
         const dataHolder = document.getElementById('movie-data-holder');
-        const movieCatalog = JSON.parse(dataHolder.getAttribute('data-catalog'));
+        const movieCatalog = JSON.parse(dataHolder.getAttribute('data-catalog') || '[]');
         
         const searchInput = document.getElementById('movie_search');
         const dropdownMenu = document.getElementById('dropdown-menu');
-        const hiddenInput = document.getElementById('hidden_movie_title');
         const slider = document.getElementById('alpha');
         const output = document.getElementById('alpha-val');
 
         // Render a fresh, randomized 500-movie layout view inside the tray
         function renderInitialCatalog() {
             dropdownMenu.innerHTML = "";
+            if (movieCatalog.length === 0) return;
             
             const randomMovies = new Set();
             const maxItems = Math.min(500, movieCatalog.length);
@@ -113,7 +113,6 @@
         // Fast in-memory evaluation loop running character queries
         searchInput.addEventListener('input', function() {
             const query = this.value.toLowerCase().trim();
-            hiddenInput.value = ""; 
             dropdownMenu.innerHTML = ""; 
 
             // Fallback cleanly to full randomized list selection parameters if query context is empty
@@ -150,7 +149,6 @@
             if (e.target.classList.contains('dropdown-item')) {
                 const selectedValue = e.target.getAttribute('data-value');
                 searchInput.value = selectedValue;
-                hiddenInput.value = selectedValue;
                 dropdownMenu.classList.remove('show');
             }
         });

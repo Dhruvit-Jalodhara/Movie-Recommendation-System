@@ -11,6 +11,7 @@ body {
     align-items: center;
     overflow-x: hidden;
     box-sizing: border-box;
+    position: relative; /* Added to anchor ambient structural layout layers */
 }
 
 /* Deep Crimson & Black Multi-Layer Reflex Gradient */
@@ -148,6 +149,7 @@ body {
     transform: scale(1.02) translateY(-1px);
 }
 
+/* --- Dynamic Viewport Responsiveness --- */
 @media (max-width: 768px) {
     .features-grid {
         flex-direction: column;
@@ -156,4 +158,38 @@ body {
     .hero-section h2 {
         font-size: 1.8rem;
     }
+    body::before, body::after {
+        width: 60vw;
+        height: 60vw;
+    }
+}
+
+/* =======================================================================
+   ✨ AMBIENT LOWER CORNER GLOW EFFECTS
+   ======================================================================= */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    width: 35vw; 
+    height: 35vw;
+    max-width: 400px;
+    max-height: 400px;
+    pointer-events: none; /* Allows interacting with click targets sitting on top of the glow */
+    z-index: 0;           /* Soft positioning behind panels but over core canvas base */
+    filter: blur(80px);   /* High dispersion diffusion for premium gradient mixing */
+    opacity: 0.45;        /* Balanced brightness levels */
+}
+
+/* Lower Left Ambient Glow - Cinematic Crimson */
+body::before {
+    left: 0;
+    background: radial-gradient(circle at bottom left, rgba(229, 9, 20, 0.35), transparent 75%);
+}
+
+/* Lower Right Ambient Glow - Deep Production Velvet Violet */
+body::after {
+    right: 0;
+    background: radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.25), transparent 75%);
 }

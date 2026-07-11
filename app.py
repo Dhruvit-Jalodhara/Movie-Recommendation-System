@@ -11,14 +11,22 @@ try:
     # Instantiate the pipeline class object to fire up vector spaces once when server boots
     pipeline = predict_pipeline.PredictPipeline()
     
-    # Extract the full list of ~16,000 movie titles directly from the mapping index Series
-    # Sorting alphabetically ensures the dropdown tray looks professional and organized
-    FULL_MOVIE_CATALOG = sorted(pipeline.movie_to_idx.index.tolist())
+    # SAFE EXTRACTION: Read keys robustly whether movie_to_idx is a Dict, Series, or Index
+    if hasattr(pipeline, 'movie_dict'):
+        FULL_MOVIE_CATALOG = sorted(list(pipeline.movie_dict.keys()))
+    elif hasattr(pipeline.movie_to_idx, 'index'):
+        FULL_MOVIE_CATALOG = sorted(pipeline.movie_to_idx.index.tolist())
+    else:
+        FULL_MOVIE_CATALOG = sorted(list(pipeline.movie_to_idx.keys()))
     
-    print(f"✅ Recommender Engine Connected! Loaded {len(FULL_MOVIE_CATALOG)} titles into memory.")
+    # Create a quick case-insensitive reverse lookup dict for submission safety
+    VAL_LOOKUP_MAP = {str(title).lower().strip(): title for title in FULL_MOVIE_CATALOG}
+    
+    print(f"Recommender Engine Connected! Loaded {len(FULL_MOVIE_CATALOG)} titles into memory.")
 except Exception as init_error:
     FULL_MOVIE_CATALOG = []
-    print(f"⚠️ Initialization Failure: Could not load machine learning artifacts. Details: {str(init_error)}")
+    VAL_LOOKUP_MAP = {}
+    print(f"Initialization Failure: Could not load machine learning artifacts. Details: {str(init_error)}")
 
 @app.route('/')
 def home():
@@ -33,13 +41,16 @@ def configure():
 @app.route('/results', methods=['POST'])
 def results():
     """Executes the machine learning model pipeline using the live user preferences."""
-    selected_movie = request.form.get('movie_title')
+    raw_user_input = request.form.get('movie_title', '').strip()
     
     # Extract alpha configuration slider balance scale (ranges cleanly from 0.0 to 1.0)
     alpha_value = float(request.form.get('alpha', 0.5))
     
-    # Strict fallback validation check against the database index universe
-    if not selected_movie or selected_movie not in FULL_MOVIE_CATALOG:
+    # 🧼 CASE NORMALIZATION: Match user input case-insensitively against catalog map keys
+    selected_movie = VAL_LOOKUP_MAP.get(raw_user_input.lower())
+    
+    # Dynamic verification fallback check against the database index universe
+    if not selected_movie:
         return render_template(
             'predict.html', 
             movies=FULL_MOVIE_CATALOG, 
@@ -48,7 +59,6 @@ def results():
     
     try:
         # --- 2. EXECUTE YOUR INFERENCE ENGINE ---
-        # Pass parameters straight into your model instance method
         raw_model_outputs = pipeline.get_hybrid_recommendations(
             movie_title=selected_movie, 
             alpha=alpha_value, 
@@ -64,7 +74,6 @@ def results():
             )
         
         # --- 3. STRUCTURE MODEL RECORDS CLEANLY FOR UI SLIDERS ---
-        # The pipeline already scales metrics by 100. We cast them to clean integers for the frontend meters.
         formatted_recommendations = []
         for row in raw_model_outputs:
             formatted_recommendations.append({

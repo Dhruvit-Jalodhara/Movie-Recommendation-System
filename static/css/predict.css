@@ -11,6 +11,7 @@ body {
     align-items: center;
     overflow-x: hidden;
     box-sizing: border-box;
+    position: relative; /* Added to anchor ambient structural layout layers */
 }
 
 /* Unified Reflex Gradient Theme Layout */
@@ -253,4 +254,34 @@ input[type="range"] {
     background-color: #ff0f1b;
     box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
     transform: translateY(-2px);
+}
+
+/* =======================================================================
+   ✨ AMBIENT LOWER CORNER GLOW EFFECTS
+   ======================================================================= */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    bottom: 0;
+    width: 35vw; 
+    height: 35vw;
+    max-width: 400px;
+    max-height: 400px;
+    pointer-events: none; /* Allows interacting with click targets sitting on top of the glow */
+    z-index: 0;           /* Soft positioning behind panels but over core canvas base */
+    filter: blur(80px);   /* High dispersion diffusion for premium gradient mixing */
+    opacity: 0.45;        /* Balanced brightness levels */
+}
+
+/* Lower Left Ambient Glow - Cinematic Crimson */
+body::before {
+    left: 0;
+    background: radial-gradient(circle at bottom left, rgba(229, 9, 20, 0.35), transparent 75%);
+}
+
+/* Lower Right Ambient Glow - Deep Production Velvet Violet */
+body::after {
+    right: 0;
+    background: radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.25), transparent 75%);
 }
