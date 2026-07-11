@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curated Selections - CineBlend</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="results-container">
+        <!-- Navigation & Dynamic Header -->
+        <header class="results-header">
+            <a href="/configure" class="back-link">← Adjust Preferences</a>
+            <h1>Curated Selections for: <span class="highlight">“{{ movie_title }}”</span></h1>
+            <p class="config-meta">Click on any recommendation card below to focus your selection profile.</p>
+        </header>
+
+        <!-- Ranked Results Layout -->
+        <main class="cards-grid">
+            {% for rec in recommendations %}
+                <!-- First card is highlighted by default, clicking shifts the state instantly -->
+                <div class="rec-card {% if loop.first %}selected-match{% endif %}">
+                    <!-- Rank Indicator Badge -->
+                    <div class="rank-badge">#{{ rec.rank }}</div>
+                    
+                    <!-- Film Context Details -->
+                    <div class="card-content">
+                        <h2>{{ rec.title }}</h2>
+                        
+                        <div class="metrics-suite">
+                            <div class="metric-row main-score">
+                                <span>Unified Match Profile</span>
+                                <span class="score-val">{{ rec.combined_score }}%</span>
+                            </div>
+                            
+                            <!-- Dynamic Percentage Progress Bar -->
+                            <div class="progress-bar">
+                                <div class="progress-fill" data-score="{{ rec.combined_score }}"></div>
+                            </div>
+                            
+                            <!-- Granular Non-Technical Core Breakdown -->
+                            <div class="breakdown-grid">
+                                <div class="sub-metric">
+                                    <span class="label">Thematic Fit</span>
+                                    <span class="val">{{ rec.tfidf_score }}%</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="label">Audience Alignment</span>
+                                    <span class="val">{{ rec.svd_score }}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </main>
+    </div>
+
+    <!-- Interactive Selection & Progress Rendering Script -->
+    <script>
+        // Render progress bars smoothly on load
+        document.querySelectorAll('.progress-fill').forEach(bar => {
+            const score = bar.getAttribute('data-score');
+            bar.style.width = score + '%';
+        });
+
+        // Dynamic highlight shifter loop targeting user card selection clicks
+        const cards = document.querySelectorAll('.rec-card');
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Clear out the active highlight flag state from all other items
+                cards.forEach(c => c.classList.remove('selected-match'));
+                
+                // Assign the active crimson accent styling package to the selected card
+                card.classList.add('selected-match');
+            });
+        });
+    </script>
+</body>
+</html>

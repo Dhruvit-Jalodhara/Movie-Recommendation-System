@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBlend - Intelligent Film Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="showcase-container">
+        <!-- Brand Header -->
+        <header class="brand-header">
+            <h1 class="logo">CINE<span>BLEND</span></h1>
+        </header>
+
+        <!-- Project Introduction Hero -->
+        <main class="hero-section">
+            <h2>The Art of Cinema, Balanced by Intelligence.</h2>
+            <p class="hero-description">
+                Welcome to CineBlend. This system analyzed over 16,000 films to help you discover your next favorite movie by perfectly balancing what a film is about with how global audiences connected to it.
+            </p>
+
+            <!-- How It Works Panel (Jargon-Free) -->
+            <section class="how-it-works">
+                <h3>How the Engine Thinks</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📖</div>
+                        <h4>Narrative & Themes</h4>
+                        <p>The system studies plot structures, core storylines, and underlying genres to find films that share the exact emotional and thematic DNA as your favorites.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h4>Audience Preferences</h4>
+                        <p>By studying structural viewing habits and rating patterns, the system maps out collective human tastes to find hidden gems enjoyed by similar viewers.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Button to go to the input page -->
+            <div class="action-wrapper">
+                <a href="/configure" class="launch-btn">✨ Launch Recommender Engine</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

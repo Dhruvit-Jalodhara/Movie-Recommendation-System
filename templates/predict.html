@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure Selections - CineBlend</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/predict.css') }}">
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <div class="panel-container" id="movie-data-holder" data-catalog="{{ movies|tojson | forceescape }}">
+        
+        <!-- Brand Header -->
+        <header class="brand-header">
+            <h1 class="logo"><a href="/" style="text-decoration: none; color: inherit;">CINE<span>BLEND</span></a></h1>
+        </header>
+
+        <!-- Configuration Panel Card -->
+        <div class="config-card">
+            <h2>Customize Your Profile</h2>
+            <p class="subtitle">Select a baseline film and adjust the balancing scale to guide our recommendation engine.</p>
+            
+            {% if error %}
+                <div class="error-banner">
+                    <span class="error-icon">🍿</span> {{ error }}
+                </div>
+            {% endif %}
+
+            <!-- Configuration Submission Form -->
+            <form action="/results" method="POST" class="engine-form" id="recommender-form">
+                
+                <!-- Dynamic Search Dropdown Group -->
+                <div class="form-group">
+                    <label for="movie_search">Select a Reference Film</label>
+                    <div class="custom-dropdown" id="movie-dropdown">
+                        <input type="hidden" name="movie_title" id="hidden_movie_title" required>
+                        <input type="text" id="movie_search" placeholder="Click to browse all or type to search..." autocomplete="off" required>
+                        
+                        <!-- Floating Option List Container -->
+                        <div class="dropdown-menu" id="dropdown-menu"></div>
+                    </div>
+                </div>
+
+                <!-- Balanced Calibration Scale Slider -->
+                <div class="slider-container">
+                    <div class="slider-header">
+                        <span class="weight-tag text-flavor">📖 Narrative & Themes</span>
+                        <span class="weight-tag behavior-flavor">👥 Audience Preferences</span>
+                    </div>
+                    <input type="range" name="alpha" id="alpha" min="0" max="1" step="0.05" value="0.5">
+                    <div class="slider-readout">
+                        Recommendation Focus: <span id="alpha-val">Perfectly Balanced Analysis</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="cta-btn">✨ Generate Selections</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dual Mode Dropdown & Search Select Controller -->
+    <script>
+        const dataHolder = document.getElementById('movie-data-holder');
+        const movieCatalog = JSON.parse(dataHolder.getAttribute('data-catalog'));
+        
+        const searchInput = document.getElementById('movie_search');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        const hiddenInput = document.getElementById('hidden_movie_title');
+        const slider = document.getElementById('alpha');
+        const output = document.getElementById('alpha-val');
+
+        // Render a fresh, randomized 500-movie layout view inside the tray
+        function renderInitialCatalog() {
+            dropdownMenu.innerHTML = "";
+            
+            const randomMovies = new Set();
+            const maxItems = Math.min(500, movieCatalog.length);
+            
+            // Loop until we extract exactly 500 unique random titles from the catalog index
+            while (randomMovies.size < maxItems) {
+                const randomIndex = Math.floor(Math.random() * movieCatalog.length);
+                randomMovies.add(movieCatalog[randomIndex]);
+            }
+            
+            // Convert back to an array and sort alphabetically so it remains easy to browse
+            const initialSet = Array.from(randomMovies).sort(); 
+            
+            initialSet.forEach(movie => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.setAttribute('data-value', movie);
+                item.textContent = movie;
+                dropdownMenu.appendChild(item);
+            });
+        }
+
+        // Open complete interactive dropdown array layout on container element focus
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.value.trim() === "") {
+                renderInitialCatalog();
+            }
+            dropdownMenu.classList.add('show');
+        });
+
+        // Close layout frames cleanly on outside mouse focus coordinates
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('movie-dropdown').contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        // Fast in-memory evaluation loop running character queries
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            hiddenInput.value = ""; 
+            dropdownMenu.innerHTML = ""; 
+
+            // Fallback cleanly to full randomized list selection parameters if query context is empty
+            if (query.length === 0) {
+                renderInitialCatalog();
+                return;
+            }
+
+            // High performance matching index slice array loop execution bounds
+            const matches = [];
+            for (let i = 0; i < movieCatalog.length; i++) {
+                if (movieCatalog[i].toLowerCase().includes(query)) {
+                    matches.push(movieCatalog[i]);
+                    if (matches.length >= 30) break; 
+                }
+            }
+
+            if (matches.length === 0) {
+                dropdownMenu.innerHTML = '<div class="no-results">No matching titles found</div>';
+                return;
+            }
+
+            matches.forEach(movie => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.setAttribute('data-value', movie);
+                item.textContent = movie;
+                dropdownMenu.appendChild(item);
+            });
+        });
+
+        // Catch and submit data entries
+        dropdownMenu.addEventListener('click', function(e) {
+            if (e.target.classList.contains('dropdown-item')) {
+                const selectedValue = e.target.getAttribute('data-value');
+                searchInput.value = selectedValue;
+                hiddenInput.value = selectedValue;
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        // Slider response logic engine tracker
+        slider.oninput = function() {
+            const val = parseFloat(this.value);
+            if(val === 0.5) {
+                output.innerHTML = "Perfectly Balanced Analysis";
+            } else if (val > 0.5) {
+                output.innerHTML = "Prioritizing Audience & Viewing Trends";
+            } else {
+                output.innerHTML = "Prioritizing Storyline & Plot Narrative";
+            }
+        }
+    </script>
+</body>
+</html>

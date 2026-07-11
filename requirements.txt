@@ -6,4 +6,5 @@ joblib
 dvc
 mlflow
 dagshub
--e .
+Flask
+gunicorn
