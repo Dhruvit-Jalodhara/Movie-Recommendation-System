@@ -1,7 +1,7 @@
-numpy
-pandas
-scikit-learn
-scipy
-joblib
-Flask
-gunicorn
+Flask==3.0.3
+gunicorn==22.0.0
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.5.0
+scipy==1.13.1
+joblib==1.4.2
