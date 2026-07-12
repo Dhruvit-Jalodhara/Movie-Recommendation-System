@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Grant permissions to the application directory
 RUN chmod -R 777 /app
 
-# Expose the mandatory Hugging Face port
+# Expose the mandatory Hugging Face port 
 EXPOSE 7860
 
 CMD ["python", "app.py"]
