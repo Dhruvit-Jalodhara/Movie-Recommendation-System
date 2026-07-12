@@ -2,6 +2,7 @@
 
 🚀 **Live Web Application**: [movie-recommendation-system.containers.snapdeploy.app](https://movie-recommendation-system.containers.snapdeploy.app)  
 💻 **GitHub Repository**: [github.com/Dhruvit-Jalodhara/Movie-Recommendation-System](https://github.com/Dhruvit-Jalodhara/Movie-Recommendation-System)  
+💻 **DagsHub Repository**: [dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System) 
 📊 **MLflow Tracking Dashboard**: [dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow)  
 
 An end-to-end, production-grade machine learning system that serves hybrid movie recommendations. The system blends collaborative filtering (via TruncatedSVD matrix factorization) and content-based text analysis (via TF-IDF on genres and movie tags) to deliver highly personalized recommendation vectors. It includes data versioning with DVC, experiment tracking/model registry with MLflow (integrated with DagsHub), a real-time web portal built with Flask, and a containerized deployment configuration.
@@ -9,19 +10,28 @@ An end-to-end, production-grade machine learning system that serves hybrid movie
 ---
 
 ## Table of Contents
-1. [System Architecture](#system-architecture)
-2. [Project Key Features](#project-key-features)
-3. [Project Directory Structure](#project-directory-structure)
-4. [Mathematical Engine Details](#mathematical-engine-details)
-5. [Installation & Local Setup](#installation--local-setup)
-6. [ML Pipeline Workflows](#ml-pipeline-workflows)
-   - [Data Ingestion](#1-data-ingestion)
-   - [Data Preprocessing](#2-data-preprocessing)
-   - [Model Training & Tracking](#3-model-training)
-   - [Predictive Pipeline & Blending](#4-predictive-pipeline)
-7. [Running the Flask Web Application](#running-the-flask-web-application)
-8. [Docker Production Deployment](#docker-production-deployment)
-9. [MLflow & DVC Tracking with DagsHub](#mlflow--dvc-tracking-with-dagshub)
+- [Hybrid Movie Recommendation System](#hybrid-movie-recommendation-system)
+  - [Table of Contents](#table-of-contents)
+  - [System Architecture](#system-architecture)
+  - [Project Key Features](#project-key-features)
+  - [Project Directory Structure](#project-directory-structure)
+  - [Mathematical Engine Details](#mathematical-engine-details)
+  - [Installation \& Local Setup](#installation--local-setup)
+    - [1. Clone the Project Workspace](#1-clone-the-project-workspace)
+    - [2. Create and Activate Virtual Environment](#2-create-and-activate-virtual-environment)
+    - [3. Install System Dependencies](#3-install-system-dependencies)
+    - [4. Pull DVC-Tracked Data](#4-pull-dvc-tracked-data)
+  - [ML Pipeline Workflows](#ml-pipeline-workflows)
+    - [1. Data Ingestion](#1-data-ingestion)
+    - [2. Data Preprocessing](#2-data-preprocessing)
+    - [3. Model Training](#3-model-training)
+    - [4. Predictive Pipeline](#4-predictive-pipeline)
+  - [Running the Flask Web Application](#running-the-flask-web-application)
+    - [Web Interface Usage](#web-interface-usage)
+  - [Docker Production Deployment](#docker-production-deployment)
+  - [MLflow \& DVC Tracking with DagsHub](#mlflow--dvc-tracking-with-dagshub)
+    - [MLflow Logging Registry](#mlflow-logging-registry)
+    - [DVC Storage Location](#dvc-storage-location)
 
 ---
 
