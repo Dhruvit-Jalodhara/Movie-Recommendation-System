@@ -44,7 +44,7 @@ class PredictPipeline:
                 processed_movies_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movies_processed.joblib",
                 movie_features_svd_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movie_features_svd.joblib",
                 tfidf_matrix_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/tfidf_matrix.joblib",
-                movie_mapping_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movie_mapping.joblib"
+                movie_mapping_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movie_mapping.joblib"    
             }
             
             for path, url in dvc_artifacts.items():
