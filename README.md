@@ -1,7 +1,8 @@
 # Hybrid Movie Recommendation System
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/Dhruvit-Jalodhara/Movie-Recommendation-System)
-[![Live Application](https://img.shields.io/badge/Live-Application-success?logo=google-cloud)](https://movie-recommendation-system.containers.snapdeploy.app)
+🚀 **Live Web Application**: [movie-recommendation-system.containers.snapdeploy.app](https://movie-recommendation-system.containers.snapdeploy.app)  
+💻 **GitHub Repository**: [github.com/Dhruvit-Jalodhara/Movie-Recommendation-System](https://github.com/Dhruvit-Jalodhara/Movie-Recommendation-System)  
+📊 **MLflow Tracking Dashboard**: [dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow)  
 
 An end-to-end, production-grade machine learning system that serves hybrid movie recommendations. The system blends collaborative filtering (via TruncatedSVD matrix factorization) and content-based text analysis (via TF-IDF on genres and movie tags) to deliver highly personalized recommendation vectors. It includes data versioning with DVC, experiment tracking/model registry with MLflow (integrated with DagsHub), a real-time web portal built with Flask, and a containerized deployment configuration.
 
@@ -243,7 +244,7 @@ docker run -p 7860:7860 movie-recommender:latest
 The system integrates directly with DagsHub for remote metadata tracking and model registering.
 
 ### MLflow Logging Registry
-- **URI**: `https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow`
+- **URI / Dashboard**: [DagsHub MLflow Server](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow)
 - **Logged Parameters**:
   - `svd_n_components` (50)
   - `svd_random_state` (42)
@@ -256,5 +257,5 @@ The system integrates directly with DagsHub for remote metadata tracking and mod
   - `TFIDF_Content_Engine`
 
 ### DVC Storage Location
-- **Remote**: `https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.dvc`
+- **Remote**: [DagsHub DVC Storage](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.dvc)
 - Automatically manages heavy `.csv` inputs and model binaries tracking.
