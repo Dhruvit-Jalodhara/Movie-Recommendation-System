@@ -31,7 +31,7 @@ except Exception as init_error:
 
 @app.route('/')
 def home():
-    """Step 1: Landing Home Page. Welcomes users to CineBlend."""
+    """Step 1: Landing Home Page."""
     if INIT_ERROR_MSG:
         return render_template(
             'home.html', 
@@ -42,7 +42,7 @@ def home():
 @app.route('/predict')
 @app.route('/configure')
 def predict():
-    """Step 2: Profile Customization Page. Renders the interactive selection engine panels."""
+    """Step 2: Profile Customization Page."""
     if INIT_ERROR_MSG:
         return render_template(
             'predict.html', 
@@ -53,7 +53,7 @@ def predict():
 
 @app.route('/results', methods=['POST'])
 def results():
-    """Step 3: Recommendation Results Page. Processes selections and delivers vector distances."""
+    """Step 3: Recommendation Results Page."""
     raw_user_input = request.form.get('movie_title', '').strip()
     alpha_value = float(request.form.get('alpha', 0.5))
     
