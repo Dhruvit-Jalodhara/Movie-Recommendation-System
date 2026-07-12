@@ -3,8 +3,5 @@ pandas
 scikit-learn
 scipy
 joblib
-dvc
-mlflow
-dagshub
 Flask
 gunicorn
