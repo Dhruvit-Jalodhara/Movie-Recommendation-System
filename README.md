@@ -3,6 +3,7 @@
 🚀 **Live Web Application**: [movie-recommendation-system.containers.snapdeploy.app](https://movie-recommendation-system.containers.snapdeploy.app)  
 💻 **GitHub Repository**: [github.com/Dhruvit-Jalodhara/Movie-Recommendation-System](https://github.com/Dhruvit-Jalodhara/Movie-Recommendation-System)  
 💻 **DagsHub Repository**: [dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System) 
+
 📊 **MLflow Tracking Dashboard**: [dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow](https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System.mlflow)  
 
 An end-to-end, production-grade machine learning system that serves hybrid movie recommendations. The system blends collaborative filtering (via TruncatedSVD matrix factorization) and content-based text analysis (via TF-IDF on genres and movie tags) to deliver highly personalized recommendation vectors. It includes data versioning with DVC, experiment tracking/model registry with MLflow (integrated with DagsHub), a real-time web portal built with Flask, and a containerized deployment configuration.
