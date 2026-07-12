@@ -31,17 +31,18 @@ except Exception as init_error:
 
 @app.route('/')
 def home():
-    """Renders the main page. Surfaces startup errors if data loading fails."""
+    """Step 1: Landing Home Page. Welcomes users to CineBlend."""
     if INIT_ERROR_MSG:
         return render_template(
-            'predict.html', 
-            movies=[], 
+            'home.html', 
             error=f"Backend Load Failure: {INIT_ERROR_MSG}. Check your file paths or data URLs."
         )
-    return render_template('predict.html', movies=FULL_MOVIE_CATALOG)
+    return render_template('home.html')
 
+@app.route('/predict')
 @app.route('/configure')
-def configure():
+def predict():
+    """Step 2: Profile Customization Page. Renders the interactive selection engine panels."""
     if INIT_ERROR_MSG:
         return render_template(
             'predict.html', 
@@ -52,6 +53,7 @@ def configure():
 
 @app.route('/results', methods=['POST'])
 def results():
+    """Step 3: Recommendation Results Page. Processes selections and delivers vector distances."""
     raw_user_input = request.form.get('movie_title', '').strip()
     alpha_value = float(request.form.get('alpha', 0.5))
     
@@ -103,6 +105,17 @@ def results():
             movies=FULL_MOVIE_CATALOG, 
             error=f"Recommender Engine Error: {str(server_error)}"
         )
+
+@app.after_request
+def add_header(response):
+    """
+    Instructs browsers and proxies to bypass local caches for dynamic routes.
+    Forces a fresh asset evaluation loop on every page reload.
+    """
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 if __name__ == '__main__':
     # Read container port assigned dynamically by the cloud host environment
