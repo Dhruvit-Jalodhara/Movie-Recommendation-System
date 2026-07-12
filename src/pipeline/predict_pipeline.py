@@ -41,10 +41,10 @@ class PredictPipeline:
             os.makedirs('artifacts', exist_ok=True)
             
             dvc_artifacts = {
-                processed_movies_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movies_processed.joblib",
-                movie_features_svd_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movie_features_svd.joblib",
-                tfidf_matrix_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/tfidf_matrix.joblib",
-                movie_mapping_path: "https://dagshub.com/api/v1/repos/Dhruvit-Jalodhara/Movie-Recommendation-System/storage/raw/dvc/artifacts/movie_mapping.joblib"
+                processed_movies_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movies_processed.joblib",
+                movie_features_svd_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movie_features_svd.joblib",
+                tfidf_matrix_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/tfidf_matrix.joblib",
+                movie_mapping_path: "https://dagshub.com/Dhruvit-Jalodhara/Movie-Recommendation-System/raw/main/artifacts/movie_mapping.joblib"
             }
             
             for path, url in dvc_artifacts.items():
